@@ -28,13 +28,53 @@
             Join Priv9!
         </p>
 
-        <a id="invite-button" href="https://discord.com/oauth2/authorize?client_id=1414972745120223232&permissions=8&scope=bot" class="inline-block px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-full transition-colors duration-200 ease-in-out shadow-lg transform hover:scale-105">
-            Invite Me!
-        </a>
+        <!-- Dynamic Content Section -->
+        <div id="dynamic-content">
+            <div id="loading" class="text-gray-500 text-lg mb-4">
+                <i class="fas fa-spinner fa-spin mr-2"></i> Generating invite link...
+            </div>
+            <a id="invite-button" href="#" class="hidden inline-block px-8 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-full transition-colors duration-200 ease-in-out shadow-lg transform hover:scale-105">
+                Click to Join
+            </a>
+            <p id="error-message" class="hidden text-red-500 mt-4"></p>
+        </div>
 
         <div class="mt-8 text-sm text-gray-500">
             <p>&copy; 2025 Priv9 . All rights reserved.</p>
         </div>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const loading = document.getElementById('loading');
+            const inviteButton = document.getElementById('invite-button');
+            const errorMessage = document.getElementById('error-message');
+
+            const botUrl = "https://bot-z841.onrender.com"; // Replace with your bot's public URL
+
+            // Function to fetch the invite link from the bot
+            const fetchInvite = async () => {
+                try {
+                    const response = await fetch(`${botUrl}/invite`);
+                    const data = await response.json();
+
+                    if (response.ok) {
+                        inviteButton.href = data.invite_url;
+                        loading.classList.add('hidden');
+                        inviteButton.classList.remove('hidden');
+                    } else {
+                        throw new Error(data.error || 'Failed to generate invite.');
+                    }
+                } catch (error) {
+                    console.error('Error fetching invite:', error);
+                    loading.classList.add('hidden');
+                    errorMessage.textContent = 'Sorry, the bot is having trouble generating an invite link right now.';
+                    errorMessage.classList.remove('hidden');
+                }
+            };
+
+            fetchInvite();
+        });
+    </script>
 </body>
 </html>
